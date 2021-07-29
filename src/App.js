@@ -9,6 +9,11 @@ function App() {
     var relativeHeightRatio = window.screen.height / elmnt.offsetHeight;
     console.log(relativeWidthRatio);
     console.log(relativeHeightRatio);
+
+    const overview = document.getElementById("overview");
+    const relativeView = document.getElementById("relativeView");
+    const relativeRatio = overview.offsetWidth / elmnt.offsetWidth;
+
     //좌표 정하기
     const setCoordinates = () => {
       setImgOffsetX(elmnt.getBoundingClientRect().left);
@@ -16,8 +21,7 @@ function App() {
 
       setP1(elmnt.getBoundingClientRect().left);
       setP3(elmnt.getBoundingClientRect().top);
-      const overview = document.getElementById("overview");
-      const relativeView = document.getElementById("relativeView");
+
       console.log(relativeView);
       relativeView.style.width =
         overview.offsetWidth * relativeWidthRatio + "px";
@@ -64,6 +68,8 @@ function App() {
         if (offsetX < 0) {
           //console.log("왼쪽으로 돌릴수 있는 조건 합");
           elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+          relativeView.style.left =
+            (elmnt.offsetLeft - pos1) * relativeRatio + "px";
         } else {
           //console.log("왼쪽으로 돌릴 조건이 안됨");
           elmnt.style.left = 0 + "px";
@@ -73,6 +79,8 @@ function App() {
         if (offsetX > -maxLimitX) {
           //console.log("오른쪽으로 돌릴수 있는 조건 합");
           elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+          relativeView.style.left =
+            (elmnt.offsetLeft - pos1) * relativeRatio + "px";
         } else {
           //console.log("오른쪽으로 돌릴 조건이 안됨");
           elmnt.style.left = -maxLimitX + "px";
