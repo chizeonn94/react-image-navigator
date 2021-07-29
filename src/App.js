@@ -5,11 +5,26 @@ import React, { useState, useEffect } from "react";
 
 function App() {
   const dragElement = (elmnt) => {
+    var relativeWidthRatio = window.screen.width / elmnt.offsetWidth;
+    var relativeHeightRatio = window.screen.height / elmnt.offsetHeight;
+    console.log(relativeWidthRatio);
+    console.log(relativeHeightRatio);
     //좌표 정하기
     const setCoordinates = () => {
+      setImgOffsetX(elmnt.getBoundingClientRect().left);
+      setImgOffsetY(elmnt.getBoundingClientRect().top);
+
       setP1(elmnt.getBoundingClientRect().left);
       setP3(elmnt.getBoundingClientRect().top);
-      setWidthRatio();
+      const overview = document.getElementById("overview");
+      const relativeView = document.getElementById("relativeView");
+      console.log(relativeView);
+      relativeView.style.width =
+        overview.offsetWidth * relativeWidthRatio + "px";
+      //relativeView.style.height = relativeHeightRatio + "px";
+      relativeView.style.height =
+        overview.offsetWidth * relativeHeightRatio + "px";
+
       console.log("*******", p1);
     };
 
@@ -64,21 +79,21 @@ function App() {
         }
       }
       if (pos2 < 0) {
-        console.log("아래로 내리는중", offsetY);
+        //console.log("아래로 내리는중", offsetY);
         if (offsetY < 0 && offsetY > -maxLimitY) {
-          console.log("아래쪽으로 돌릴수 있는 조건 합");
+          //console.log("아래쪽으로 돌릴수 있는 조건 합");
           elmnt.style.top = elmnt.offsetTop - pos2 + "px";
         } else {
-          console.log("아래로 돌릴 조건이 안됨");
+          //console.log("아래로 돌릴 조건이 안됨");
           //elmnt.style.top = 0 + "px";
         }
       } else {
-        console.log("위로 올리는 중", offsetY);
+        //console.log("위로 올리는 중", offsetY);
         if (offsetY > -maxLimitY) {
-          console.log("위쪽으로 돌릴수 있는 조건 합");
+          //console.log("위쪽으로 돌릴수 있는 조건 합");
           elmnt.style.top = elmnt.offsetTop - pos2 + "px";
         } else {
-          console.log("위로 돌릴 수 있는 조건이 안됨", offsetY);
+          //console.log("위로 돌릴 수 있는 조건이 안됨", offsetY);
           //elmnt.style.top = -maxLimitY + "px";
         }
       }
@@ -125,15 +140,16 @@ function App() {
   useEffect(() => {
     const mydiv = document.getElementById("mydiv");
     dragElement(mydiv);
-    setHeightRatio(mydiv.offsetHeight / mydiv.offsetWidth);
-    console.log(heightRatio);
+    setImgRatio(mydiv.offsetHeight / mydiv.offsetWidth);
   });
-  const [heightRatio, setHeightRatio] = useState(1);
+  const [imgRatio, setImgRatio] = useState(1);
+  const [imgOffsetX, setImgOffsetX] = useState(0);
+  const [imgOffsetY, setImgOffsetY] = useState(0);
   const [p1, setP1] = useState(0);
   const [p2, setP2] = useState(0);
   const [p3, setP3] = useState(0);
   const [p4, setP4] = useState(0);
-  const [widthRatio, setWidthRatio] = useState(1);
+
   return (
     <div className="App">
       <div>
@@ -149,7 +165,7 @@ function App() {
             position: "absolute",
             outline: "2px solid gold",
             width: 200,
-            height: 200 * heightRatio,
+            height: 200 * imgRatio,
             zIndex: 100000,
             left: 15,
             top: 15,
@@ -157,7 +173,22 @@ function App() {
             backgroundSize: "100%",
           }}
         >
-          <div id="relativeView" />
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <div
+              id="relativeView"
+              style={{
+                outline: "2px solid red",
+                backgroundColor: "transparent",
+                position: "absolute",
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
