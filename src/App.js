@@ -23,6 +23,7 @@ function App() {
 
     const heightReductionRatio = overview.offsetHeight / elmnt.offsetHeight;
 
+    //relativeView.style.left = 100 + "px";
     //좌표 정하기
     const setCoordinates = () => {
       setImgOffsetX(elmnt.getBoundingClientRect().left);
@@ -37,7 +38,7 @@ function App() {
         overview.offsetWidth * relativeWidthRatio + "px";
       //relativeView.style.height = relativeHeightRatio + "px";
       relativeView.style.height =
-        overview.offsetHeight * relativeWidthRatio + "px";
+        overview.offsetHeight * relativeHeightRatio + "px";
     };
 
     const dragMouseDown = (e) => {
@@ -71,52 +72,119 @@ function App() {
       //console.log("offset", offsetX, offsetY);
 
       // x축 왼쪽 방향으로 움직일때
+      //가져온것
       if (pos1 < 0) {
-        //console.log("왼쪽으로 움직이는중", offsetX);
-        if (offsetX < 0) {
-          //console.log("왼쪽으로 돌릴수 있는 조건 합");
+        //console.log("왼쪽");
+        // x축 왼쪽 방향으로 움직일때
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().left >
+          document.getElementById("overview").getBoundingClientRect().left
+        ) {
+          //console.log("오른쪽으로 돌릴 조건");
           elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
           relativeView.style.left =
             -(elmnt.offsetLeft - pos1) * widthReductionRatio + "px";
         } else {
-          //console.log("왼쪽으로 돌릴 조건이 안됨");
-          elmnt.style.left = 0 + "px";
+          //console.log("왼쪽으로 돌릴 조건 되지 않음.");
         }
       } else {
-        //console.log("오른쪽으로 움직이는중", offsetX);
-        if (offsetX > -maxLimitX) {
-          //console.log("오른쪽으로 돌릴수 있는 조건 합");
+        // 오른쪽 방향으로 움직일때
+        //console.log("오른쪽");
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().left +
+            relativeViewRef.current.clientWidth <
+          document.getElementById("overview").getBoundingClientRect().left +
+            overviewRef.current.clientWidth
+        ) {
           elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
           relativeView.style.left =
             -(elmnt.offsetLeft - pos1) * widthReductionRatio + "px";
         } else {
-          //console.log("오른쪽으로 돌릴 조건이 안됨");
-          elmnt.style.left = -maxLimitX + "px";
         }
       }
+
       if (pos2 < 0) {
-        //console.log("아래로 내리는중", offsetY);
-        if (offsetY < 0 && offsetY > -maxLimitY) {
-          //console.log("아래쪽으로 돌릴수 있는 조건 합");
+        //y축 방향으로 위로 내릴때
+        console.log("up");
+
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().top >
+          document.getElementById("overview").getBoundingClientRect().top
+        ) {
+          //console.log("위쪽으로 돌릴 조ㅌㅌㅌㅌ건");
           elmnt.style.top = elmnt.offsetTop - pos2 + "px";
           relativeView.style.top =
             -(elmnt.offsetTop - pos1) * heightReductionRatio + "px";
         } else {
-          //console.log("아래로 돌릴 조건이 안됨");
-          //elmnt.style.top = 0 + "px";
+          console.log("아래쪽으로 돌릴 조건 되지 않음.");
         }
       } else {
-        //console.log("위로 올리는 중", offsetY);
-        if (offsetY > -maxLimitY) {
-          //console.log("위쪽으로 돌릴수 있는 조건 합");
+        //y축방향으로 아래로 내릴때
+        console.log("down**");
+        console.log(
+          document.getElementById("relativeView").getBoundingClientRect().top,
+          document.getElementById("overview").getBoundingClientRect().top
+        );
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().top +
+            relativeViewRef.current.clientHeight <
+          document.getElementById("overview").getBoundingClientRect().top +
+            overviewRef.current.clientHeight
+        ) {
+          //console.log("위쪽으로 돌릴 조ㅌㅌㅌㅌ건");
           elmnt.style.top = elmnt.offsetTop - pos2 + "px";
           relativeView.style.top =
             -(elmnt.offsetTop - pos1) * heightReductionRatio + "px";
         } else {
-          //console.log("위로 돌릴 수 있는 조건이 안됨", offsetY);
-          //elmnt.style.top = -maxLimitY + "px";
+          //console.log("위쪽으로 돌릴 조건 되지 않음.");
         }
       }
+      // if (pos1 < 0) {
+      //   //console.log("왼쪽으로 움직이는중", offsetX);
+      //   if (offsetX < 0) {
+      //     //console.log("왼쪽으로 돌릴수 있는 조건 합");
+      //     elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+      //     relativeView.style.left =
+      //       -(elmnt.offsetLeft - pos1) * widthReductionRatio + "px";
+      //   } else {
+      //     //console.log("왼쪽으로 돌릴 조건이 안됨");
+      //     elmnt.style.left = 0 + "px";
+      //   }
+      // } else {
+      //   //console.log("오른쪽으로 움직이는중", offsetX);
+      //   if (offsetX > -maxLimitX) {
+      //     //console.log("오른쪽으로 돌릴수 있는 조건 합");
+      //     elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+      //     relativeView.style.left =
+      //       -(elmnt.offsetLeft - pos1) * widthReductionRatio + "px";
+      //   } else {
+      //     //console.log("오른쪽으로 돌릴 조건이 안됨");
+      //     elmnt.style.left = -maxLimitX + "px";
+      //   }
+      // }
+      // if (pos2 < 0) {
+      //   //console.log("아래로 내리는중", offsetY);
+      //   if (offsetY < 0 && offsetY > -maxLimitY) {
+      //     //console.log("아래쪽으로 돌릴수 있는 조건 합");
+      //     elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+      //     relativeView.style.top =
+      //       -(elmnt.offsetTop - pos1) * heightReductionRatio + "px";
+      //   } else {
+      //     //console.log("아래로 돌릴 조건이 안됨");
+      //     //elmnt.style.top = 0 + "px";
+      //   }
+      // } else {
+      //   //console.log("위로 올리는 중", offsetY);
+      //   if (offsetY > -maxLimitY) {
+      //     //console.log("위쪽으로 돌릴수 있는 조건 합");
+      //     elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+      //     relativeView.style.top =
+      //       -(elmnt.offsetTop - pos1) * heightReductionRatio + "px";
+      //   } else {
+      //     //console.log("위로 돌릴 수 있는 조건이 안됨", offsetY);
+      //     //elmnt.style.top = -maxLimitY + "px";
+      //   }
+      // }
       // if (offsetX > -maxLimitX && offsetX < 0) {
       //   console.log("x ok");
       //   // set the element's new position:
@@ -158,6 +226,119 @@ function App() {
   };
 
   // ***************** relative view move ******************
+
+  const dragElement3 = (elmnt) => {
+    var s1 = 0,
+      s2 = 0,
+      s3 = 0,
+      s4 = 0;
+
+    const dragMouseDown = (e) => {
+      console.log("dragMouseDown");
+      e = e || window.event;
+      e.preventDefault();
+      // get the mouse cursor position at startup:
+      s3 = e.clientX;
+      s4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      // call a function whenever the cursor moves:
+      document.onmousemove = elementDrag;
+    };
+
+    const elementDrag = (e) => {
+      e = e || window.event;
+      e.preventDefault();
+      // calculate the new cursor position:
+      s1 = s3 - e.clientX;
+      s2 = s4 - e.clientY;
+      s3 = e.clientX;
+      s4 = e.clientY;
+
+      // set the element's new position:
+      // console.log(s1, s2, s3, s4);
+      //elmnt.style.top = elmnt.offsetTop - s2 + "px";
+      //elmnt.style.left = elmnt.offsetLeft - s1 + "px";
+
+      // console.log(
+      //   document.getElementById("relativeView").getBoundingClientRect().left +
+      //     relativeViewRef.current.clientWidth,
+      //   document.getElementById("overview").getBoundingClientRect().left +
+      //     overviewRef.current.clientWidth
+      // );
+
+      if (s1 < 0) {
+        // x축 오른쪽 방향으로 움직일때
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().left +
+            relativeViewRef.current.clientWidth <
+          document.getElementById("overview").getBoundingClientRect().left +
+            overviewRef.current.clientWidth
+        ) {
+          //console.log("오른쪽으로 돌릴 조건");
+          elmnt.style.left = elmnt.offsetLeft - s1 + "px";
+        } else {
+          //console.log("오른쪽으로 돌릴 조건 되지 않음.");
+        }
+      } else {
+        // x축 왼쪽 방향으로 움직일때
+        //console.log("왼쪽으로 움직이는중");
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().left >
+          document.getElementById("overview").getBoundingClientRect().left
+        ) {
+          //console.log("왼쪽으로 돌릴 조건");
+          elmnt.style.left = elmnt.offsetLeft - s1 + "px";
+        } else {
+          //console.log("왼쪽으로 돌릴 조건 되지 않음.");
+        }
+      }
+
+      if (s2 < 0) {
+        //y축 방향으로 아래로 내릴때
+        //console.log("down");
+        console.log(
+          document.getElementById("relativeView").getBoundingClientRect().top +
+            relativeViewRef.current.clientHeight,
+          document.getElementById("overview").getBoundingClientRect().top +
+            overviewRef.current.clientHeight
+        );
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().top +
+            relativeViewRef.current.clientHeight <
+          document.getElementById("overview").getBoundingClientRect().top +
+            overviewRef.current.clientHeight
+        ) {
+          //console.log("아래쪽으로 돌릴 조건");
+          elmnt.style.top = elmnt.offsetTop - s2 + "px";
+        } else {
+          //console.log("아래쪽으로 돌릴 조건 되지 않음.");
+        }
+      } else {
+        //y축방향으로 위로 올릴때
+        //console.log("up");
+
+        if (
+          document.getElementById("relativeView").getBoundingClientRect().top >
+          document.getElementById("overview").getBoundingClientRect().top
+        ) {
+          //console.log("위쪽으로 돌릴 조건");
+          elmnt.style.top = elmnt.offsetTop - s2 + "px";
+        } else {
+          //console.log("위쪽으로 돌릴 조건 되지 않음.");
+        }
+      }
+    };
+
+    const closeDragElement = () => {
+      /* stop moving when mouse button is released:*/
+      document.onmouseup = null;
+      document.onmousemove = null;
+    };
+
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  };
+
   const dragElement2 = (elmnt) => {
     //elmnt란 움직일 물체를 의미함.
     const dragMouseDown = (e) => {
@@ -297,14 +478,13 @@ function App() {
   useEffect(() => {
     const mydiv = document.getElementById("mydiv");
     const relativeView = document.getElementById("relativeView");
+
     setImgRatio(
       bigJennieRef.current.clientHeight / bigJennieRef.current.clientWidth
     );
-    console.log("*****************height", bigJennieRef.current.clientHeight);
-    console.log("*****************width", bigJennieRef.current.clientWidth);
-    console.log(imgRatio);
+
     dragElement(mydiv);
-    dragElement2(relativeView);
+    dragElement3(relativeView);
     setRelativeWidth(overviewRef.current?.clientWidth * relativeWidthRatio);
     setRelativeHeight(overviewRef.current?.clientHeight * relativeHeightRatio);
   });
