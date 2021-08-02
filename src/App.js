@@ -1,12 +1,19 @@
 import logo from "./logo.svg";
 import "./App.css";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function App() {
+  const mydivRef = useRef(null);
+  const bigJennieRef = useRef(null);
+  const relativeViewRef = useRef(null);
+  const overviewRef = useRef(null);
+  var relativeWidthRatio =
+    window.screen.width / bigJennieRef.current?.clientWidth;
+  var relativeHeightRatio =
+    window.screen.height / bigJennieRef.current?.clientHeight;
+  //console.log("/////////////", bigJennieRef.current?.clientHeight);
   const dragElement = (elmnt) => {
-    var relativeWidthRatio = window.screen.width / elmnt.offsetWidth;
-    var relativeHeightRatio = window.screen.height / elmnt.offsetHeight;
     //console.log(relativeWidthRatio);
     //console.log(relativeHeightRatio);
 
@@ -25,11 +32,12 @@ function App() {
       setP3(elmnt.getBoundingClientRect().top);
 
       //console.log(relativeView);
+
       relativeView.style.width =
         overview.offsetWidth * relativeWidthRatio + "px";
       //relativeView.style.height = relativeHeightRatio + "px";
       relativeView.style.height =
-        overview.offsetWidth * relativeHeightRatio + "px";
+        overview.offsetHeight * relativeWidthRatio + "px";
     };
 
     const dragMouseDown = (e) => {
@@ -199,19 +207,46 @@ function App() {
         overviewOffsetX +
         document.getElementById("overview").offsetWidth -
         document.getElementById("relativeView").offsetWidth;
+
+      var minY = overviewOffsetY;
+      var maxY =
+        overviewOffsetY +
+        document.getElementById("overview").offsetHeight -
+        document.getElementById("relativeView").offsetHeight;
+
+      var ratioHorizontal =
+        (document.getElementById("relativeView").getBoundingClientRect().left -
+          document.getElementById("overview").getBoundingClientRect().left) /
+        document.getElementById("overview").offsetWidth;
+      var ratioVertical =
+        (document.getElementById("relativeView").getBoundingClientRect().top -
+          document.getElementById("overview").getBoundingClientRect().top) /
+        document.getElementById("overview").offsetHeight;
+      console.log(ratioHorizontal, ratioVertical);
       //console.log("min", minX, "max", maxX);
       // X축 방향으로 움직일때
       if (l1 < 0) {
         //console.log("right");
         if (smallViewOffsetX < maxX) {
-          //elmnt.style.left = elmnt.offsetLeft - l1 + "px";
+          elmnt.style.left = elmnt.offsetLeft - l1 + "px";
+          document.getElementById("mydiv").style.left =
+            document.getElementById("mydiv").offsetLeft -
+            l1 *
+              document.getElementById("mydiv").offsetWidth *
+              ratioHorizontal +
+            "px";
         } else {
           //console.log("cant move to right");
         }
       } else {
         //console.log("left");
         if (smallViewOffsetX > minX) {
-          //elmnt.style.left = elmnt.offsetLeft - l1 + "px";
+          elmnt.style.left = elmnt.offsetLeft - l1 + "px";
+          document.getElementById("mydiv").style.left =
+            -(
+              document.getElementById("mydiv").offsetLeft -
+              l1 * document.getElementById("mydiv").offsetWidth * ratioVertical
+            ) + "px";
         } else {
           //console.log("cant move to left");
         }
@@ -220,12 +255,17 @@ function App() {
       //y축 방향으로 움직일때
       if (l2 < 0) {
         console.log("down");
-        elmnt.style.top = elmnt.offsetTop - l2 + "px";
-      } else {
-        console.log("up");
-        if (true) {
+        if (smallViewOffsetY < maxY) {
           elmnt.style.top = elmnt.offsetTop - l2 + "px";
         } else {
+          console.log("cant move to down");
+        }
+      } else {
+        console.log("up");
+        if (smallViewOffsetY > minY) {
+          elmnt.style.top = elmnt.offsetTop - l2 + "px";
+        } else {
+          console.log("cant move to up");
         }
       }
     };
@@ -240,6 +280,7 @@ function App() {
       l2 = 0,
       l3 = 0,
       l4 = 0;
+
     var maxLimitX = elmnt.offsetWidth - window.screen.width;
     var maxLimitY = elmnt.offsetHeight - window.screen.height;
 
@@ -256,9 +297,16 @@ function App() {
   useEffect(() => {
     const mydiv = document.getElementById("mydiv");
     const relativeView = document.getElementById("relativeView");
+    setImgRatio(
+      bigJennieRef.current.clientHeight / bigJennieRef.current.clientWidth
+    );
+    console.log("*****************height", bigJennieRef.current.clientHeight);
+    console.log("*****************width", bigJennieRef.current.clientWidth);
+    console.log(imgRatio);
     dragElement(mydiv);
     dragElement2(relativeView);
-    setImgRatio(mydiv.offsetHeight / mydiv.offsetWidth);
+    setRelativeWidth(overviewRef.current?.clientWidth * relativeWidthRatio);
+    setRelativeHeight(overviewRef.current?.clientHeight * relativeHeightRatio);
   });
   const [imgRatio, setImgRatio] = useState(1);
   const [imgOffsetX, setImgOffsetX] = useState(0);
@@ -267,20 +315,24 @@ function App() {
   const [p2, setP2] = useState(0);
   const [p3, setP3] = useState(0);
   const [p4, setP4] = useState(0);
+  const [relativeViewWidth, setRelativeWidth] = useState(100);
+  const [relativeViewHeight, setRelativeHeight] = useState(100);
 
   return (
     <div className="App">
       <div>
-        <div id="mydiv" style={{ position: "absolute" }}>
+        <div ref={mydivRef} id="mydiv" style={{ position: "absolute" }}>
           <img
             src="202104161605598945900_20210416161331_01.jpeg"
-            style={{ display: "block", width: 5000 }}
+            style={{ display: "block", width: 5000, height: 7500 }}
+            ref={bigJennieRef}
           />
         </div>
         <div
+          ref={overviewRef}
           id="overview"
           style={{
-            position: "absolute",
+            position: "fixed",
             outline: "2px solid gold",
             width: 300,
             height: 300 * imgRatio,
@@ -299,11 +351,15 @@ function App() {
             }}
           >
             <div
+              ref={relativeViewRef}
               id="relativeView"
               style={{
                 outline: "2px solid red",
                 backgroundColor: "transparent",
                 position: "absolute",
+                zIndex: 10000000000,
+                width: relativeViewWidth,
+                height: relativeViewHeight,
               }}
             />
           </div>
