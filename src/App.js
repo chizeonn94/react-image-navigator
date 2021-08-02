@@ -234,7 +234,6 @@ function App() {
       s4 = 0;
 
     const dragMouseDown = (e) => {
-      console.log("dragMouseDown");
       e = e || window.event;
       e.preventDefault();
       // get the mouse cursor position at startup:
@@ -275,7 +274,13 @@ function App() {
             overviewRef.current.clientWidth
         ) {
           //console.log("오른쪽으로 돌릴 조건");
+          var b1 =
+            (document.getElementById("mydiv").offsetWidth * s1) /
+            document.getElementById("overview").offsetWidth;
+
           elmnt.style.left = elmnt.offsetLeft - s1 + "px";
+          document.getElementById("mydiv").style.left =
+            document.getElementById("mydiv").offsetLeft + b1 + "px";
         } else {
           //console.log("오른쪽으로 돌릴 조건 되지 않음.");
         }
@@ -288,6 +293,13 @@ function App() {
         ) {
           //console.log("왼쪽으로 돌릴 조건");
           elmnt.style.left = elmnt.offsetLeft - s1 + "px";
+
+          var b1 =
+            (document.getElementById("mydiv").offsetWidth * s1) /
+            document.getElementById("overview").offsetWidth;
+
+          document.getElementById("mydiv").style.left =
+            document.getElementById("mydiv").offsetLeft + b1 + "px";
         } else {
           //console.log("왼쪽으로 돌릴 조건 되지 않음.");
         }
@@ -296,12 +308,7 @@ function App() {
       if (s2 < 0) {
         //y축 방향으로 아래로 내릴때
         //console.log("down");
-        console.log(
-          document.getElementById("relativeView").getBoundingClientRect().top +
-            relativeViewRef.current.clientHeight,
-          document.getElementById("overview").getBoundingClientRect().top +
-            overviewRef.current.clientHeight
-        );
+
         if (
           document.getElementById("relativeView").getBoundingClientRect().top +
             relativeViewRef.current.clientHeight <
@@ -310,6 +317,13 @@ function App() {
         ) {
           //console.log("아래쪽으로 돌릴 조건");
           elmnt.style.top = elmnt.offsetTop - s2 + "px";
+
+          var b2 =
+            (document.getElementById("mydiv").offsetHeight * s2) /
+            document.getElementById("overview").offsetHeight;
+
+          document.getElementById("mydiv").style.top =
+            document.getElementById("mydiv").offsetTop + b2 + "px";
         } else {
           //console.log("아래쪽으로 돌릴 조건 되지 않음.");
         }
@@ -323,6 +337,13 @@ function App() {
         ) {
           //console.log("위쪽으로 돌릴 조건");
           elmnt.style.top = elmnt.offsetTop - s2 + "px";
+
+          var b2 =
+            (document.getElementById("mydiv").offsetHeight * s2) /
+            document.getElementById("overview").offsetHeight;
+
+          document.getElementById("mydiv").style.top =
+            document.getElementById("mydiv").offsetTop + b2 + "px";
         } else {
           //console.log("위쪽으로 돌릴 조건 되지 않음.");
         }
